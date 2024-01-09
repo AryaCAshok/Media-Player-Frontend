@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import { addCategory, deleteCategory } from '../services/allAPI';
+import { addCategory, deleteCategory, getVideoDetailsById, updateCategory } from '../services/allAPI';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getAllCategory } from '../services/allAPI';
@@ -56,6 +56,29 @@ function Category() {
 
         
   }
+  const dragOver=(e)=>{
+    e.preventDefault()
+    console.log("Inside category dragver");
+  }
+  const videoDrop =async(e,categoryID)=>{
+    console.log(`videocard dropped inside category with id ${categoryID}`);
+    const videoid=e.dataTransfer.getData("videoID");
+    console.log(`video with ID ${videoid} need to be placed in category with id ${categoryID}`);
+
+  const res = await getVideoDetailsById(videoid);
+  console.log("===video need to be dropped===");
+  console.log(res);
+  const {data}=res;
+  console.log(data);
+  let selectedCategory = allCategory?.find((item)=>item.id== categoryID)
+  console.log(selectedCategory);
+  selectedCategory.allVideos.push(data);
+  console.log("==final category with video data==");
+  console.log(selectedCategory);
+  const result =await updateCategory(categoryID,selectedCategory);
+  
+
+  }
   return (
     <>
     <div>
@@ -68,7 +91,7 @@ function Category() {
             allCategory.map((item)=>(
 
            
-     <div className='m-5 border border-secondary rounded p-3'>
+     <div className='m-5 border border-secondary rounded p-3'droppable onDragOver={(e)=>dragOver(e)} onDrop={(e)=>videoDrop(e,item?.id)}>
         <div className='d-flex justify-content-between  align-items-center'>
             <h6>{item.categoryName}</h6>
             <button className='btn btn-danger ms-3'onClick={()=>handleDelete(item.id)}><i class="fa-solid fa-trash"></i></button>

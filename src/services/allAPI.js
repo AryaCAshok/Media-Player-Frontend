@@ -52,3 +52,14 @@ export const getAllCategory=async()=>{
 export const deleteCategory=async(id)=>{
    return await commonAPI('DELETE',`${serverURL}/category/${id}`,{})
 }
+
+// 10) to get details of a specific video by its Id
+
+export const getVideoDetailsById =async(id)=>{
+   return await commonAPI('GET',`${serverURL}/videos/${id}`,"")
+}
+
+// 11) update categoru with dragged videos
+ export const updateCategory =async(id,body)=>{
+   return await commonAPI('PUT',`${serverURL}/category/${id}`,body)
+ }
